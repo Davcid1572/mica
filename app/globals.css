@@ -1,26 +1,76 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  /* surfaces */
+  --color-canvas: #e9e5dc;
+  --color-porcelain: #faf7f2;
+  --color-paper: #f3efe7;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* brand greens */
+  --color-pine: #0f6e56;
+  --color-pine-soft: #21413a;
+  --color-pine-deep: #18302a;
+  --color-pine-deeper: #162b25;
+  --color-pine-haze: #9db8ad;
+  --color-pine-glow: #5dcaa5;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  /* warm accent */
+  --color-clay: #d4915b;
+
+  /* text and lines */
+  --color-ink: #1f2623;
+  --color-stone: #4a5551;
+  --color-stone-light: #66726d; /* ~4.7:1 on porcelain (AA) */
+  --color-stone-line: #e6e0d5;
+
+  /* moods: mood UI only (mirrors lib/moods.ts) */
+  --color-mood-growth: #86b28c;
+  --color-mood-joy: #e8b964;
+  --color-mood-calm: #7fa8c9;
+  --color-mood-tender: #d2917a;
+  --color-mood-rest: #8488b8;
+  --color-mood-heavy: #5e6b8a;
+
+  /* type */
+  --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+
+  /* shape */
+  --radius-phone: 40px;
+
+  /* motion */
+  --animate-float: float 6s ease-in-out infinite;
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  html {
+    background: var(--color-canvas);
+  }
+  body {
+    font-family: var(--font-sans);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float {
+    animation: none;
+  }
 }
