@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { StatusBar } from "@/components/ui/StatusBar";
+import { signOut } from "@/app/actions/auth";
 import { currentUser, micaLayers, journalEntries } from "@/lib/mock-data";
 import { routes } from "@/lib/flow";
 
@@ -29,16 +30,23 @@ export default function ProfilePage() {
           </div>
           <div>
             <div className="font-serif text-[22px]">{currentUser.name}</div>
-            <div className="text-[13px] text-stone-light">{currentUser.email}</div>
+            <div className="text-[13px] text-stone-light">
+              {currentUser.email}
+            </div>
           </div>
         </div>
 
         {/* stats */}
         <div className="mb-6 grid grid-cols-3 gap-3">
           {stats.map((s) => (
-            <div key={s.label} className="rounded-2xl border border-stone-line bg-white px-3 py-4 text-center">
+            <div
+              key={s.label}
+              className="rounded-2xl border border-stone-line bg-white px-3 py-4 text-center"
+            >
               <div className="font-serif text-[26px] text-pine">{s.value}</div>
-              <div className="mt-0.5 text-[11px] leading-tight text-stone-light">{s.label}</div>
+              <div className="mt-0.5 text-[11px] leading-tight text-stone-light">
+                {s.label}
+              </div>
             </div>
           ))}
         </div>
@@ -57,12 +65,14 @@ export default function ProfilePage() {
           ))}
         </div>
 
-        <Link
-          href={routes.signIn}
-          className="mt-4 block rounded-2xl py-4 text-center text-[15px] font-medium text-clay"
-        >
-          Sign out
-        </Link>
+        <form action={signOut}>
+          <button
+            type="submit"
+            className="mt-4 block h-11 w-full rounded-2xl text-center text-[15px] font-medium text-clay-deep"
+          >
+            Sign out
+          </button>
+        </form>
       </div>
     </>
   );

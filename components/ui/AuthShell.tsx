@@ -1,64 +1,3 @@
-// import Link from "next/link";
-// import { LeafMark } from "@/components/brand/Logo";
-// import { StatusBar } from "@/components/ui/StatusBar";
-// import { Button } from "@/components/ui/Button";
-
-// /**
-//  * Shared layout for the auth screens (sign up / sign in).
-//  * Fields are UI-only — wire `onSubmit` to your auth provider.
-//  */
-// export function AuthShell({
-//   title,
-//   subtitle,
-//   fields,
-//   submitLabel,
-//   submitHref,
-//   footer,
-// }: {
-//   title: string;
-//   subtitle: string;
-//   fields: { label: string; type: string; placeholder: string; name: string }[];
-//   submitLabel: string;
-//   submitHref: string;
-//   footer: React.ReactNode;
-// }) {
-//   return (
-//     <div className="flex min-h-screen items-center justify-center bg-canvas p-0 sm:p-6">
-//       <div className="relative mx-auto h-screen w-full overflow-hidden bg-porcelain sm:h-[680px] sm:w-[320px] sm:rounded-phone sm:border sm:border-stone-line sm:shadow-[0_24px_60px_-20px_rgba(33,65,58,0.22)]">
-//         <StatusBar tone="dark" />
-
-//         <div className="px-7 pt-4">
-//           <LeafMark size={44} tone="light" />
-//           <h1 className="mt-7 font-serif text-[30px] font-normal leading-tight">{title}</h1>
-//           <p className="mt-2 text-[15px] text-stone">{subtitle}</p>
-
-//           {/* UI-only form — replace action with your auth handler */}
-//           <form className="mt-7 flex flex-col gap-3.5">
-//             {fields.map((f) => (
-//               <label key={f.name} className="block">
-//                 <span className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.12em] text-stone-light">
-//                   {f.label}
-//                 </span>
-//                 <input
-//                   type={f.type}
-//                   name={f.name}
-//                   placeholder={f.placeholder}
-//                   className="h-[50px] w-full rounded-2xl border border-stone-line bg-white px-4 text-[15px] text-ink outline-none placeholder:text-stone-light focus:border-pine"
-//                 />
-//               </label>
-//             ))}
-//           </form>
-//         </div>
-
-//         <div className="absolute inset-x-7 bottom-9">
-//           <Button href={submitHref}>{submitLabel}</Button>
-//           <div className="mt-4 text-center text-[13px] text-stone">{footer}</div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
 "use client";
 
 import { useActionState } from "react";
@@ -83,6 +22,8 @@ export function AuthShell({
   action,
   aside,
   footer,
+  hidden,
+  initialNotice,
 }: {
   title: string;
   subtitle: string;
@@ -91,8 +32,12 @@ export function AuthShell({
   action: (prev: AuthState, fd: FormData) => Promise<AuthState>;
   aside?: React.ReactNode;
   footer: React.ReactNode;
+  hidden?: Record<string, string>;
+  initialNotice?: string;
 }) {
-  const [state, formAction, pending] = useActionState(action, {} as AuthState);
+  const [state, formAction, pending] = useActionState(action, {
+    notice: initialNotice,
+  } as AuthState);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-canvas p-0 sm:p-6">
@@ -100,6 +45,11 @@ export function AuthShell({
         <StatusBar tone="dark" />
 
         <form action={formAction}>
+          {hidden &&
+            Object.entries(hidden).map(([k, v]) => (
+              <input key={k} type="hidden" name={k} value={v} />
+            ))}
+
           <div className="px-7 pt-4">
             <LeafMark size={44} tone="light" />
             <h1 className="mt-7 font-serif text-[30px] font-normal leading-tight">

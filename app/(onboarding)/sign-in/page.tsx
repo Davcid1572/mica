@@ -3,9 +3,19 @@ import { AuthShell } from "@/components/ui/AuthShell";
 import { signIn } from "@/app/actions/auth";
 import { routes } from "@/lib/flow";
 
-export default function SignInPage() {
+export default async function SignInPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ reset?: string }>;
+}) {
+  const { reset } = await searchParams;
   return (
     <AuthShell
+      initialNotice={
+        reset
+          ? "Your password is updated. Sign in when you're ready."
+          : undefined
+      }
       title="Welcome back"
       subtitle="Pick up where you left off."
       fields={[

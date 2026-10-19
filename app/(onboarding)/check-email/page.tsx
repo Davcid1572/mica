@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { LeafMark } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/Button";
 import { Screen } from "@/components/ui/Screen";
@@ -29,6 +30,12 @@ export default async function CheckEmailPage({
         </p>
         <p className="mt-3 text-[13px] text-stone">
           Can't see it? Take a look in your spam folder.
+        </p>
+        <p className="mt-1 text-[13px] text-stone">
+          Wrong email?{" "}
+          <Link href={routes.signUp} className="font-semibold text-pine">
+            Start over
+          </Link>
         </p>
       </div>
       <div className="absolute inset-x-7 bottom-9">

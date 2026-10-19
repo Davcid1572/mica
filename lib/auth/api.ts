@@ -29,7 +29,11 @@ async function request<T>(
 
     if (!res.ok) {
       const m = payload?.message;
-      const message = Array.isArray(m) ? m[0] : typeof m === "string" ? m : "";
+      const message = Array.isArray(m)
+        ? m.join("; ")
+        : typeof m === "string"
+          ? m
+          : "";
       return { ok: false, status: res.status, message };
     }
     return { ok: true, data: payload as T };
@@ -53,4 +57,13 @@ export const authApi = {
     }),
   logout: (token: string) =>
     request<unknown>("/auth/logout", { form: {}, token }),
+  resetPassword: (
+    email: string,
+    token: string,
+    newPassword: string,
+    confirmPassword: string,
+  ) =>
+    request<{ success: boolean; message: string }>("/auth/reset-password", {
+      form: { email, token, newPassword, confirmPassword },
+    }),
 };

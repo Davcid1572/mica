@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LeafMark } from "@/components/brand/Logo";
@@ -46,6 +46,7 @@ const panes = [
 export function OnboardingCarousel() {
   const router = useRouter();
   const [i, setI] = useState(0);
+  const startX = useRef<number | null>(null);
   const last = i === panes.length - 1;
 
   function leave(dest: string) {
@@ -67,7 +68,18 @@ export function OnboardingCarousel() {
         </button>
       </div>
 
-      <div className="overflow-hidden">
+      <div
+        className="touch-pan-y overflow-hidden"
+        onPointerDown={(e) => (startX.current = e.clientX)}
+        onPointerCancel={() => (startX.current = null)}
+        onPointerUp={(e) => {
+          if (startX.current === null) return;
+          const dx = e.clientX - startX.current;
+          startX.current = null;
+          if (dx < -40 && i < panes.length - 1) setI(i + 1);
+          if (dx > 40 && i > 0) setI(i - 1);
+        }}
+      >
         <div
           className="flex transition-transform duration-500 ease-out motion-reduce:transition-none"
           style={{ transform: `translateX(-${i * 100}%)` }}
