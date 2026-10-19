@@ -38,6 +38,19 @@
   /* shape */
   --radius-phone: 40px;
 
+  --color-clay-deep: #9c5a28; /* ~5:1 on porcelain, for clay text */
+  --animate-fade-in: fade-in 700ms ease-out both;
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
   /* motion */
   --animate-float: float 6s ease-in-out infinite;
   @keyframes float {
@@ -71,6 +84,13 @@
 
 @media (prefers-reduced-motion: reduce) {
   .animate-float {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-fade-in {
     animation: none;
   }
 }
