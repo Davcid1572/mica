@@ -86,3 +86,8 @@ export interface User {
   streakDays: number;
   joinedAt: string;
 }
+
+export type JournalState = {
+  error?: string;
+  values?: { body?: string; mood?: string };
+};

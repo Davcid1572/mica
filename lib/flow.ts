@@ -61,4 +61,5 @@ export const routes = {
   settings: "/settings",
   forgotPassword: "/forgot-password",
   checkEmail: "/check-email",
+  journalEdit: (id: string) => `/journal/${id}/edit`,
 } as const;
