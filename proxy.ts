@@ -8,7 +8,9 @@ const PUBLIC = [
   "/sign-up",
   "/sign-in",
   "/forgot-password",
+  "/reset-password",
   "/check-email",
+  "/session-expired",
 ];
 const GUEST_ONLY = ["/sign-in", "/sign-up"];
 
@@ -27,7 +29,7 @@ export async function proxy(req: NextRequest) {
   if (access) return NextResponse.next();
   if (!refresh) return to("/sign-in");
 
-  // Access token expired — trade the refresh token for a new pair.
+  // Access token expired: trade the refresh token for a new pair.
   try {
     const res = await fetch(`${API}/auth/refresh`, {
       method: "POST",
@@ -36,7 +38,12 @@ export async function proxy(req: NextRequest) {
     });
     if (!res.ok) throw new Error("refresh failed");
     const { data } = await res.json();
-    const next = NextResponse.next();
+
+    // Server components in THIS request can't see cookies set on the response,
+    // so forward the new access token on a request header as well.
+    const headers = new Headers(req.headers);
+    headers.set("x-mica-access", data.access_token);
+    const next = NextResponse.next({ request: { headers } });
     next.cookies.set(
       COOKIE.access,
       data.access_token,
@@ -50,6 +57,7 @@ export async function proxy(req: NextRequest) {
     return next;
   } catch {
     const out = to("/sign-in");
+    out.cookies.delete(COOKIE.access);
     out.cookies.delete(COOKIE.refresh);
     return out;
   }

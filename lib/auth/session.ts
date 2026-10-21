@@ -1,4 +1,4 @@
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { COOKIE, cookieOptions } from "./tokens";
 import type { Tokens } from "./types";
 
@@ -22,6 +22,9 @@ export async function clearSession() {
   jar.delete(COOKIE.refresh);
 }
 
+/** Cookie first; falls back to the token the proxy just refreshed. */
 export async function getAccessToken() {
-  return (await cookies()).get(COOKIE.access)?.value;
+  const fromCookie = (await cookies()).get(COOKIE.access)?.value;
+  if (fromCookie) return fromCookie;
+  return (await headers()).get("x-mica-access") ?? undefined;
 }

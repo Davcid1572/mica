@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { StatusBar } from "@/components/ui/StatusBar";
+import { Avatar } from "@/components/ui/Avatar";
 import { signOut } from "@/app/actions/auth";
-import { currentUser, micaLayers, journalEntries } from "@/lib/mock-data";
+import { getProfile } from "@/lib/api/users";
+import { micaLayers, journalEntries } from "@/lib/mock-data";
 import { routes } from "@/lib/flow";
 
 const rows = [
@@ -11,12 +13,15 @@ const rows = [
   { label: "Get support", href: routes.chat },
 ];
 
-export default function ProfilePage() {
+export default async function ProfilePage() {
+  const user = await getProfile();
+
   const stats = [
-    { value: currentUser.streakDays, label: "Day streak" },
+    { value: user?.streakDays ?? 0, label: "Day streak" },
     { value: micaLayers.length, label: "Mica layers" },
     { value: journalEntries.length, label: "Journal entries" },
   ];
+
   return (
     <>
       <StatusBar tone="dark" />
@@ -25,13 +30,13 @@ export default function ProfilePage() {
 
         {/* identity */}
         <div className="mb-6 flex items-center gap-4">
-          <div className="grid h-16 w-16 place-items-center rounded-full bg-gradient-to-br from-mood-growth to-clay text-2xl font-semibold text-white">
-            {currentUser.name[0]}
-          </div>
-          <div>
-            <div className="font-serif text-[22px]">{currentUser.name}</div>
-            <div className="text-[13px] text-stone-light">
-              {currentUser.email}
+          <Avatar name={user?.name} src={user?.avatarUrl} size={64} />
+          <div className="min-w-0">
+            <div className="truncate font-serif text-[22px]">
+              {user?.name ?? "Your account"}
+            </div>
+            <div className="truncate text-[13px] text-stone-light">
+              {user?.email ?? "We couldn't load your details just now."}
             </div>
           </div>
         </div>
