@@ -3,8 +3,9 @@ import { StatusBar } from "@/components/ui/StatusBar";
 import { Avatar } from "@/components/ui/Avatar";
 import { signOut } from "@/app/actions/auth";
 import { getProfile } from "@/lib/api/users";
-import { micaLayers, journalEntries } from "@/lib/mock-data";
+import { journalEntries } from "@/lib/mock-data";
 import { routes } from "@/lib/flow";
+import { getTotalLayers } from "@/lib/api/checkin";
 
 const rows = [
   { label: "Settings", href: routes.settings },
@@ -14,11 +15,14 @@ const rows = [
 ];
 
 export default async function ProfilePage() {
-  const user = await getProfile();
+  const [user, totalLayers] = await Promise.all([
+    getProfile(),
+    getTotalLayers(),
+  ]);
 
   const stats = [
     { value: user?.streakDays ?? 0, label: "Day streak" },
-    { value: micaLayers.length, label: "Mica layers" },
+    { value: totalLayers ?? 0, label: "Mica layers" },
     { value: journalEntries.length, label: "Journal entries" },
   ];
 

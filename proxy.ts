@@ -12,7 +12,7 @@ const PUBLIC = [
   "/check-email",
   "/session-expired",
 ];
-const GUEST_ONLY = ["/sign-in", "/sign-up"];
+const GUEST_ONLY = ["/", "/sign-in", "/sign-up"];
 
 export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;

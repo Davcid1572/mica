@@ -91,3 +91,5 @@ export type JournalState = {
   error?: string;
   values?: { body?: string; mood?: string };
 };
+
+export type CheckInState = { error?: string };

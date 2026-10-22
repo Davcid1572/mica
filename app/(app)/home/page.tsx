@@ -5,7 +5,7 @@ import { Greeting } from "@/components/screens/Greeting";
 import { MicaStone } from "@/components/brand/MicaStone";
 import { routes } from "@/lib/flow";
 import { getProfile } from "@/lib/api/users";
-import { micaLayers } from "@/lib/mock-data";
+import { getLayers, getTotalLayers } from "@/lib/api/checkin";
 
 const tools = [
   {
@@ -35,8 +35,17 @@ const tools = [
 ];
 
 export default async function HomePage() {
-  const user = await getProfile();
+  const [user, layers, total] = await Promise.all([
+    getProfile(),
+    getLayers(),
+    getTotalLayers(),
+  ]);
   const streak = user?.streakDays ?? 0;
+  const count = total ?? layers?.length ?? 0;
+  const heroTitle =
+    count === 0
+      ? "Your stone is waiting"
+      : `${count} ${count === 1 ? "layer" : "layers"}, and growing`;
 
   return (
     <>
@@ -67,14 +76,14 @@ export default async function HomePage() {
             }}
           />
           <div className="relative shrink-0">
-            <MicaStone layers={micaLayers} size={96} float />
+            <MicaStone layers={(layers ?? []).slice(0, 12)} size={96} float />
           </div>
           <div className="relative">
             <div className="mb-1.5 text-[11px] uppercase tracking-[0.16em] text-pine-haze">
               Your Mica
             </div>
             <div className="mb-2 font-serif text-[22px] leading-tight text-porcelain">
-              {micaLayers.length} layers, and growing
+              {heroTitle}
             </div>
             <div className="text-[13px] text-[#A8BDB4]">
               {streak > 0
